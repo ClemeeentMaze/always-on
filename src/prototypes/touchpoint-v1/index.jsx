@@ -60,18 +60,21 @@ const SUGGESTED_STUDIES = [
     iconColor: 'awake',
     title: 'Test your new pricing page',
     description: 'Understand how users react to your updated pricing tiers before launch.',
+    reason: 'Q1 goal: Increase conversion',
   },
   {
     icon: 'idea',
     iconColor: 'featured',
     title: 'Validate onboarding changes',
     description: 'Continuously measure whether new users complete setup successfully.',
+    reason: 'Q1 goal: Reduce churn',
   },
   {
     icon: 'goal',
     iconColor: 'success',
     title: 'Track NPS after each release',
     description: 'Automatically collect satisfaction scores every time you ship.',
+    reason: 'OKR: Improve CSAT to 4.5+',
   },
 ];
 
@@ -209,13 +212,20 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
   );
 }
 
-function SuggestedStudyCard({ icon, iconColor, title, description }) {
+function SuggestedStudyCard({ icon, iconColor, title, description, reason }) {
   return (
     <div className="flex-1 min-w-0 bg-white rounded-lg p-4 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
-      <IconFigure name={icon} color={iconColor} size="MD" mode="light" shape="squared" />
+      <Flex alignItems="center" justifyContent="space-between">
+        <IconFigure name={icon} color={iconColor} size="SM" mode="light" shape="squared" />
+        {reason && (
+          <Tag bg="#F9F7FF" color="#6B5BEE" height="18px" lineHeight="18px" fontSize="10px" borderRadius="4px">
+            {reason}
+          </Tag>
+        )}
+      </Flex>
       <div className="flex flex-col gap-1">
         <Text className="font-semibold text-sm">{title}</Text>
-        <Text color="default.main.secondary" className="text-xs leading-4">{description}</Text>
+        <Text type="caption" color="default.main.secondary">{description}</Text>
       </div>
     </div>
   );
@@ -318,7 +328,7 @@ function TouchpointV1() {
                 <RunningStudyRow {...RUNNING_STUDY} />
 
                 <div className="mt-2">
-                  <Text color="default.main.secondary" className="text-sm font-semibold uppercase tracking-wider mb-3">
+                  <Text type="caption" color="default.main.secondary" className="font-semibold uppercase tracking-wider mb-3">
                     Suggested for your team
                   </Text>
                   <Flex gap="MD">
