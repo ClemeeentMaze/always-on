@@ -256,7 +256,7 @@ function HighlightReelThumb({ clipCount, clipAvatars, accentColor }) {
       <div className="flex items-center gap-1">
         <div className="flex -space-x-1.5">
           {clipAvatars.slice(0, 3).map((a) => (
-            <InitialsFigure key={a.initials} initials={a.initials} color={a.color} size="XS" mode="dark" shape="rounded" />
+            <InitialsFigure key={a.initials} initials={a.initials} color={a.color} size="SM" mode="dark" shape="rounded" />
           ))}
         </div>
         <Text type="caption" color="default.main.secondary">{clipCount} clips</Text>

@@ -214,6 +214,31 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
   );
 }
 
+function PulsingDot() {
+  return (
+    <div className="relative flex items-center justify-center">
+      <style>{`
+        @keyframes pulse-ring {
+          0% { transform: scale(1); opacity: 0.6; }
+          70% { transform: scale(2.2); opacity: 0; }
+          100% { transform: scale(2.2); opacity: 0; }
+        }
+      `}</style>
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: 8,
+          height: 8,
+          backgroundColor: '#2E7D32',
+          opacity: 0.3,
+          animation: 'pulse-ring 2s ease-out infinite',
+        }}
+      />
+      <div className="rounded-full" style={{ width: 8, height: 8, backgroundColor: '#2E7D32' }} />
+    </div>
+  );
+}
+
 function AutomationRuleCard({ triggerIcon, trigger, actionIcon, action }) {
   return (
     <div className="flex-1 min-w-0 bg-white rounded-lg p-4 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
@@ -222,7 +247,7 @@ function AutomationRuleCard({ triggerIcon, trigger, actionIcon, action }) {
           <Icon name={triggerIcon} size="14px" color="#9DA2B8" />
           <Text type="caption" color="default.main.secondary">{trigger}</Text>
         </Flex>
-        <Dot size={8} color="#2E7D32" />
+        <PulsingDot />
       </Flex>
 
       <div className="flex items-center gap-2 pl-0.5">
@@ -231,8 +256,10 @@ function AutomationRuleCard({ triggerIcon, trigger, actionIcon, action }) {
         </svg>
       </div>
 
-      <Flex alignItems="center" gap="SM" className="rounded-md px-3 py-2" style={{ backgroundColor: '#F8F8FB' }}>
-        <Icon name={actionIcon} size="16px" color="#535A74" />
+      <Flex alignItems="flex-start" gap="SM" className="rounded-md px-3 py-2" style={{ backgroundColor: '#F8F8FB' }}>
+        <div className="shrink-0 mt-0.5">
+          <Icon name={actionIcon} size="16px" color="#535A74" />
+        </div>
         <Text className="text-sm leading-5">{action}</Text>
       </Flex>
     </div>

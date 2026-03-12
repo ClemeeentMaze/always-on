@@ -12,7 +12,6 @@ import {
   TextBadge,
   Tag,
   Dot,
-  SegmentControl,
 } from '@framework/components/ariane';
 
 const TEMPLATE_IMAGES = [
@@ -57,20 +56,15 @@ const RUNNING_STUDY = {
 };
 
 const CONTEXT_CHIPS = [
-  'Why are users dropping off at checkout?',
-  'How do users compare us to competitors?',
-  'What friction points exist in onboarding?',
+  { text: 'Why are users dropping off at checkout?', source: 'Checkout conversion dropped 12% this quarter (Analytics)' },
+  { text: 'How do users compare us to competitors?', source: 'Q1 goal: Understand competitive positioning' },
+  { text: 'What friction points exist in onboarding?', source: 'Onboarding completion rate is below target (68%)' },
 ];
 
 const INSIGHT_CHIPS = [
-  'Explore pricing concerns from recent sessions',
-  'Why do power users skip the dashboard?',
-  'Dig into onboarding drop-off patterns',
-];
-
-const SEGMENT_OPTIONS = [
-  { id: 'context', label: 'From your context' },
-  { id: 'insights', label: 'From your insights' },
+  { text: 'Explore pricing concerns from recent sessions', source: '67% of users mentioned pricing in checkout study' },
+  { text: 'Why do power users skip the dashboard?', source: 'Dashboard engagement dropped 20% for power users' },
+  { text: 'Dig into onboarding drop-off patterns', source: 'Step 3 of onboarding has 45% abandonment rate' },
 ];
 
 function SidebarNavItem({ icon, label, active, hasChevron }) {
@@ -291,7 +285,6 @@ function TouchpointV2() {
                       boxShadow: 'inset 0px 0px 0px 1.5px rgba(108,113,140,0.28)',
                     }}
                   >
-                    <Icon name="sparkles" size="24px" color="#6B5BEE" className="mt-0.5 shrink-0" />
                     <textarea
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
@@ -307,31 +300,55 @@ function TouchpointV2() {
                     )}
                   </div>
 
-                  <Flex alignItems="center" justifyContent="space-between">
-                    <SegmentControl
-                      options={SEGMENT_OPTIONS}
-                      selected={suggestionSource}
-                      onChange={(id) => setSuggestionSource(id)}
-                      size="SM"
-                    />
-                  </Flex>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setSuggestionSource('context')}
+                      className="pb-1 text-sm font-medium cursor-pointer bg-transparent border-none px-0"
+                      style={{
+                        color: suggestionSource === 'context' ? '#0568FD' : '#9DA2B8',
+                        borderBottom: suggestionSource === 'context' ? '2px solid #0568FD' : '2px solid transparent',
+                      }}
+                    >
+                      From your context
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSuggestionSource('insights')}
+                      className="pb-1 text-sm font-medium cursor-pointer bg-transparent border-none px-0"
+                      style={{
+                        color: suggestionSource === 'insights' ? '#0568FD' : '#9DA2B8',
+                        borderBottom: suggestionSource === 'insights' ? '2px solid #0568FD' : '2px solid transparent',
+                      }}
+                    >
+                      From your insights
+                    </button>
+                  </div>
 
                   <div className="flex flex-wrap gap-2">
                     {chips.map((chip) => (
-                      <button
-                        key={chip}
-                        type="button"
-                        onClick={() => setPromptValue(chip)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors cursor-pointer hover:bg-[#F0EDFF]"
-                        style={{
-                          backgroundColor: promptValue === chip ? '#F0EDFF' : '#F8F8FB',
-                          color: promptValue === chip ? '#6B5BEE' : '#535A74',
-                          border: promptValue === chip ? '1px solid #6B5BEE' : '1px solid transparent',
-                        }}
-                      >
-                        <Icon name="sparkles" size="14px" color={promptValue === chip ? '#6B5BEE' : '#9DA2B8'} />
-                        {chip}
-                      </button>
+                      <div key={chip.text} className="inline-flex items-center gap-0 group relative">
+                        <button
+                          type="button"
+                          onClick={() => setPromptValue(chip.text)}
+                          className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full text-sm transition-colors cursor-pointer hover:bg-[#F0EDFF]"
+                          style={{
+                            backgroundColor: promptValue === chip.text ? '#F0EDFF' : '#F8F8FB',
+                            color: promptValue === chip.text ? '#6B5BEE' : '#535A74',
+                            border: promptValue === chip.text ? '1px solid #6B5BEE' : '1px solid transparent',
+                          }}
+                        >
+                          <Icon name="sparkles" size="14px" color={promptValue === chip.text ? '#6B5BEE' : '#9DA2B8'} />
+                          {chip.text}
+                          <span className="ml-1 opacity-40 hover:opacity-100 transition-opacity">
+                            <Icon name="question-mark-circle" size="14px" color="#9DA2B8" />
+                          </span>
+                        </button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs text-white whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50" style={{ backgroundColor: '#1E1E2E' }}>
+                          {chip.source}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent" style={{ borderTopColor: '#1E1E2E' }} />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
