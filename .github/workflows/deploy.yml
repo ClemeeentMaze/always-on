@@ -41,8 +41,7 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          # User site deploys to root (no subdirectory)
-          BASE_PATH: /
+          BASE_PATH: /always-on/
 
       - name: Verify build output
         run: |
