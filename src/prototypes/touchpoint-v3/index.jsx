@@ -242,8 +242,8 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
 function HighlightReelThumb({ clipCount, clipAvatars, accentColor }) {
   return (
     <div
-      className="w-[140px] shrink-0 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer relative overflow-hidden group"
-      style={{ backgroundColor: '#F8F8FB' }}
+      className="rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer relative overflow-hidden group"
+      style={{ backgroundColor: '#F8F8FB', aspectRatio: '16 / 9' }}
     >
       <div
         className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
@@ -268,10 +268,11 @@ function HighlightReelThumb({ clipCount, clipAvatars, accentColor }) {
 function ObservationCard({ category, categoryColor, accentColor, insight, detail, sentiment, cta, clipCount, clipAvatars }) {
   return (
     <div
-      className="flex-1 min-w-0 bg-white rounded-lg overflow-hidden shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow flex"
+      className="w-[340px] shrink-0 bg-white rounded-lg overflow-hidden shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow flex flex-col"
       style={{ borderLeft: `3px solid ${accentColor}` }}
     >
-      <div className="flex-1 p-4 flex flex-col gap-2.5 min-w-0">
+      <HighlightReelThumb clipCount={clipCount} clipAvatars={clipAvatars} accentColor={accentColor} />
+      <div className="p-4 flex flex-col gap-2.5">
         <Flex alignItems="center" gap="SM">
           <Tag bg={categoryColor.bg} color={categoryColor.text} height="22px" lineHeight="22px" fontSize="11px" borderRadius="4px">
             {category}
@@ -284,7 +285,6 @@ function ObservationCard({ category, categoryColor, accentColor, insight, detail
           <CTAButton emphasis="tertiary" size="SM">{cta}</CTAButton>
         </Flex>
       </div>
-      <HighlightReelThumb clipCount={clipCount} clipAvatars={clipAvatars} accentColor={accentColor} />
     </div>
   );
 }
@@ -376,9 +376,11 @@ function TouchpointV3() {
                   <Text type="caption" color="default.main.secondary">
                     Worth exploring further
                   </Text>
-                  <div className="flex gap-3 overflow-x-auto">
+                  <div className="flex gap-4 overflow-x-auto pb-2 -mb-2" style={{ scrollSnapType: 'x mandatory' }}>
                     {OBSERVATIONS.map((obs) => (
-                      <ObservationCard key={obs.category} {...obs} />
+                      <div key={obs.category} style={{ scrollSnapAlign: 'start' }}>
+                        <ObservationCard {...obs} />
+                      </div>
                     ))}
                   </div>
                 </div>
