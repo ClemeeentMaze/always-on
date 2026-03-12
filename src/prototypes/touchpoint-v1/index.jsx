@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Text,
   Heading,
@@ -9,8 +8,6 @@ import {
   CTAButton,
   IconFigure,
   InitialsFigure,
-  FigureStack,
-  ProgressBar,
 } from '@framework/components/ariane';
 
 const TEMPLATE_IMAGES = [
@@ -36,17 +33,16 @@ const BOTTOM_NAV_ITEMS = [
   { icon: 'settings', label: 'Label' },
 ];
 
-const GUIDE_STEPS = [
-  { number: 1, title: 'Create your first study', description: 'Build both moderated and unmoderated studies on your trial.\n\nNot ready to start testing? Visit our demos.', active: true },
-  { number: 2, title: 'Recruit participants' },
-  { number: 3, title: 'Analyze results' },
-  { number: 4, title: 'Share findings' },
-];
-
 const RESOURCE_LINKS = [
   { title: 'Get Started Guide', description: 'Learn how to build your first maze.' },
   { title: 'Help center', description: 'FAQs, tips, and tricks.' },
   { title: 'Maze university', description: 'Live and on-demand training videos.' },
+];
+
+const TEAM_AVATARS = [
+  { initials: 'DS', color: 'rose' },
+  { initials: 'SL', color: 'lavender' },
+  { initials: '+1', color: 'dormant' },
 ];
 
 function SidebarNavItem({ icon, label, active, hasChevron }) {
@@ -65,6 +61,31 @@ function SidebarNavItem({ icon, label, active, hasChevron }) {
       </Text>
       {hasChevron && <Icon name="chevron-right" size="24px" color="#535A74" />}
     </Flex>
+  );
+}
+
+function AvatarStack({ avatars }) {
+  return (
+    <div className="flex items-center pr-1">
+      {avatars.map((avatar, i) => (
+        <div
+          key={avatar.initials}
+          className="relative"
+          style={{
+            marginLeft: i > 0 ? '-8px' : 0,
+            zIndex: i,
+          }}
+        >
+          <InitialsFigure
+            initials={avatar.initials}
+            color={avatar.color}
+            size="MD"
+            mode="dark"
+            shape="rounded"
+          />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -126,99 +147,12 @@ function ResourceItem({ title, description, isLast }) {
   );
 }
 
-function WelcomeGuide({ isExpanded, onToggle }) {
-  return (
-    <div className="flex flex-col rounded-lg shadow-[0px_16px_24px_rgba(0,0,0,0.06),0px_2px_6px_rgba(0,0,0,0.04),0px_0px_1px_rgba(0,0,0,0.06)] overflow-hidden w-[356px]">
-      <div className="bg-[#282D40] rounded-lg flex flex-col">
-        <Flex alignItems="center" justifyContent="space-between" className="p-6">
-          <Text className="text-xl font-semibold text-white">Welcome to Maze guide</Text>
-          <ActionButton
-            emphasis="tertiary"
-            size="SM"
-            iconOnly
-            aria-label="Minimize"
-            onClick={onToggle}
-            className="!bg-[#282D40] !text-[#9597B0] !shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)]"
-          >
-            <Icon name="minimize" size="16px" />
-          </ActionButton>
-        </Flex>
-
-        <div className="h-1 w-full relative">
-          <div className="absolute inset-0 bg-[#9597B0] rounded" />
-          <div className="absolute inset-y-0 left-0 w-[10%] bg-[#0568FD] rounded" />
-        </div>
-
-        <div className="shadow-[inset_0px_-0.5px_0px_0px_rgba(108,113,140,0.28)]" />
-
-        {isExpanded && (
-          <div className="flex flex-col gap-3">
-            {GUIDE_STEPS.map((step) => (
-              <div
-                key={step.number}
-                className={`px-6 ${step.active ? 'bg-[rgba(5,104,253,0.28)] py-6' : 'py-2'} ${step.number === GUIDE_STEPS.length ? 'pb-6' : ''}`}
-              >
-                <Flex gap="SM" alignItems="flex-start">
-                  <Text className="font-semibold text-white w-5 shrink-0">
-                    {step.number}
-                  </Text>
-                  <div className="flex flex-col gap-2">
-                    <Text className={`font-semibold ${step.active ? 'text-white' : 'text-[#9597B0]'}`}>
-                      {step.title}
-                    </Text>
-                    {step.description && (
-                      <Text className="text-sm text-white whitespace-pre-line leading-5">
-                        {step.description}
-                      </Text>
-                    )}
-                  </div>
-                </Flex>
-              </div>
-            ))}
-
-            <div className="px-6 pb-6 pt-2">
-              <Text className="text-sm text-[#6C718C] underline cursor-pointer hover:text-[#9597B0]">
-                Don't show this again
-              </Text>
-            </div>
-          </div>
-        )}
-
-        <Flex
-          alignItems="center"
-          gap="MD"
-          className="p-3 bg-[#282D40] rounded-lg shadow-[inset_0px_-0.5px_0px_0px_rgba(108,113,140,0.28)] cursor-pointer hover:bg-[#323750]"
-          onClick={onToggle}
-        >
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            <svg viewBox="0 0 32 32" className="w-8 h-8">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="#9597B0" strokeWidth="2" />
-              <circle
-                cx="16" cy="16" r="14"
-                fill="none" stroke="#0568FD" strokeWidth="2"
-                strokeDasharray={`${2 * Math.PI * 14 * 0.1} ${2 * Math.PI * 14 * 0.9}`}
-                strokeLinecap="round"
-                transform="rotate(-90 16 16)"
-              />
-            </svg>
-            <Text className="absolute text-sm text-[#9597B0]">0/5</Text>
-          </div>
-          <Text className="font-semibold text-white">NEXT: Launch a study</Text>
-        </Flex>
-      </div>
-    </div>
-  );
-}
-
 function TouchpointV1() {
-  const [guideExpanded, setGuideExpanded] = useState(true);
-
   return (
     <div className="flex w-full h-full bg-white overflow-hidden rounded-2xl">
       {/* Sidebar */}
       <div className="w-60 h-full bg-white flex flex-col justify-between shrink-0 shadow-[inset_-0.5px_0px_0px_0px_rgba(108,113,140,0.28)]">
         <div>
-          {/* Team selector */}
           <Flex alignItems="center" gap="SM" className="px-3 py-2.5">
             <InitialsFigure
               initials="SL"
@@ -234,7 +168,6 @@ function TouchpointV1() {
             <Icon name="arrow-left-right" size="24px" color="#535A74" />
           </Flex>
 
-          {/* Main nav */}
           <div>
             {NAV_ITEMS.map((item) => (
               <SidebarNavItem key={item.label} {...item} />
@@ -243,14 +176,12 @@ function TouchpointV1() {
         </div>
 
         <div>
-          {/* Bottom nav */}
           <div className="shadow-[inset_0px_0.5px_0px_0px_rgba(108,113,140,0.28)]">
             {BOTTOM_NAV_ITEMS.map((item) => (
               <SidebarNavItem key={item.label} {...item} />
             ))}
           </div>
 
-          {/* Footer */}
           <Flex alignItems="center" justifyContent="space-between" className="h-16 px-4">
             <Icon name="maze-logo" size="24px" color="#535A74" />
             <ActionButton emphasis="tertiary" size="SM" iconOnly aria-label="Collapse sidebar">
@@ -261,7 +192,7 @@ function TouchpointV1() {
       </div>
 
       {/* Main area */}
-      <div className="flex-1 flex flex-col min-w-0 relative">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
         <Flex
           alignItems="center"
@@ -269,11 +200,7 @@ function TouchpointV1() {
           className="h-16 px-4 shrink-0 shadow-[inset_0px_-0.5px_0px_0px_rgba(108,113,140,0.28)]"
         >
           <Flex alignItems="center" gap="MD">
-            <FigureStack size="MD">
-              <InitialsFigure initials="DS" color="rose" size="MD" mode="dark" shape="rounded" />
-              <InitialsFigure initials="SL" color="lavender" size="MD" mode="dark" shape="rounded" />
-              <InitialsFigure initials="+1" color="dormant" size="MD" mode="dark" shape="rounded" />
-            </FigureStack>
+            <AvatarStack avatars={TEAM_AVATARS} />
             <ActionButton emphasis="tertiary" size="SM">
               <Icon name="plus" size="16px" />
               Add team members
@@ -282,17 +209,22 @@ function TouchpointV1() {
         </Flex>
 
         {/* Content with banner */}
-        <div className="flex-1 overflow-y-auto relative">
-          {/* Purple banner */}
-          <div className="h-[200px] bg-[#C095F9] relative overflow-hidden">
-            <div className="absolute inset-0 opacity-30" style={{
-              backgroundImage: 'radial-gradient(circle at 30% 80%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.2) 0%, transparent 40%)',
-            }} />
+        <div className="flex-1 overflow-y-auto">
+          {/* Purple banner with background image */}
+          <div className="h-[264px] bg-[#C095F9] relative overflow-hidden">
+            <img
+              src="/images/home-cover.png"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ transform: 'rotate(180deg) scaleY(-1)' }}
+            />
           </div>
 
           {/* Main content */}
-          <div className="max-w-[1072px] mx-auto px-8 -mt-[140px] relative z-10 pb-8">
-            <Heading level={1} className="text-white mb-12">Welcome, Walt</Heading>
+          <div className="max-w-[1072px] mx-auto px-8 -mt-[200px] relative z-10 pb-8">
+            <Heading level={1} style={{ color: '#FFFFFF' }} className="mb-12">
+              Welcome, Walt
+            </Heading>
 
             <div className="bg-white rounded-lg p-8 flex flex-col gap-8">
               {/* Always On placeholder */}
@@ -349,14 +281,6 @@ function TouchpointV1() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Welcome guide - floating */}
-        <div className="absolute bottom-16 right-4 z-50">
-          <WelcomeGuide
-            isExpanded={guideExpanded}
-            onToggle={() => setGuideExpanded(!guideExpanded)}
-          />
         </div>
       </div>
     </div>
