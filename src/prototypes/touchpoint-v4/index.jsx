@@ -54,28 +54,31 @@ const RUNNING_STUDY = {
   newInsights: 2,
 };
 
-const SUGGESTED_STUDIES = [
+const AUTOMATION_RULES = [
   {
-    icon: 'touch',
-    iconColor: 'awake',
-    title: 'Test your new pricing page',
-    description: 'Understand how users react to your updated pricing tiers before launch.',
-    reason: 'Q1 goal: Increase conversion',
+    trigger: 'When 50+ responses collected',
+    action: 'Share key insights to #product-team',
+    actionIcon: 'share',
+    triggerColor: { bg: '#FFF3E0', text: '#E65100' },
   },
   {
-    icon: 'idea',
-    iconColor: 'featured',
-    title: 'Validate onboarding changes',
-    description: 'Continuously measure whether new users complete setup successfully.',
-    reason: 'Q1 goal: Reduce churn',
+    trigger: 'When new theme detected',
+    action: 'Suggest follow-up study on lowest-scoring themes',
+    actionIcon: 'sparkles',
+    triggerColor: { bg: '#F0EDFF', text: '#6B5BEE' },
   },
   {
-    icon: 'goal',
-    iconColor: 'success',
-    title: 'Track NPS after each release',
-    description: 'Automatically collect satisfaction scores every time you ship.',
-    reason: 'OKR: Improve CSAT to 4.5+',
+    trigger: 'Every Monday',
+    action: 'Generate weekly summary for stakeholders',
+    actionIcon: 'message',
+    triggerColor: { bg: '#E8F0FE', text: '#0568FD' },
   },
+];
+
+const RECENT_ACTIVITY = [
+  { time: '2h ago', icon: 'share', text: 'Shared 3 new insights to #product-team' },
+  { time: 'Yesterday', icon: 'sparkles', text: 'Suggested follow-up: Pricing page usability' },
+  { time: '3 days ago', icon: 'message', text: 'Weekly summary sent to 4 stakeholders' },
 ];
 
 function SidebarNavItem({ icon, label, active, hasChevron }) {
@@ -199,9 +202,7 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
 
         <Flex alignItems="center" gap="LG">
           <TextBadge sentiment="awake">LIVE</TextBadge>
-
           <IconFigure name="maze-logo" color="primary" size="SM" mode="dark" shape="squared" />
-
           <Flex alignItems="center" gap="XS">
             <Dot size={8} color="blue500" />
             <Text className="whitespace-nowrap">{newInsights} New insights</Text>
@@ -212,69 +213,70 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
   );
 }
 
-function SuggestedStudyCard({ icon, iconColor, title, description, reason }) {
+function AutomationRuleCard({ trigger, action, actionIcon, triggerColor }) {
   return (
     <div className="flex-1 min-w-0 bg-white rounded-lg p-4 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
-      <IconFigure name={icon} color={iconColor} size="SM" mode="light" shape="squared" />
-      <div className="flex flex-col gap-1 flex-1">
-        <Text className="font-semibold text-sm">{title}</Text>
-        <Text type="caption" color="default.main.secondary">{description}</Text>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Tag bg={triggerColor.bg} color={triggerColor.text} height="24px" lineHeight="24px" fontSize="12px" borderRadius="4px">
+          {trigger}
+        </Tag>
+        <Dot size={8} color="#2E7D32" />
+      </Flex>
+
+      <div className="flex items-center gap-1.5 text-[#9DA2B8]">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 3v10M8 13l-3-3M8 13l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
-      {reason && (
-        <div className="flex">
-          <span
-            className="inline-block px-2 py-0.5 rounded"
-            style={{
-              backgroundColor: '#F9F7FF',
-              color: '#6B5BEE',
-              fontSize: '14px',
-              lineHeight: '20px',
-              fontWeight: 400,
-            }}
-          >
-            {reason}
-          </span>
+
+      <Flex alignItems="flex-start" gap="SM">
+        <div className="shrink-0 mt-0.5">
+          <Icon name={actionIcon} size="16px" color="#535A74" />
         </div>
-      )}
+        <Text className="text-sm leading-5">{action}</Text>
+      </Flex>
     </div>
   );
 }
 
-function TouchpointV1() {
+function ActivityLine({ time, icon, text }) {
+  return (
+    <Flex alignItems="center" gap="SM" className="py-1.5">
+      <Text type="caption" color="default.main.secondary" className="w-20 shrink-0 text-right">
+        {time}
+      </Text>
+      <Icon name={icon} size="14px" color="#9DA2B8" />
+      <Text className="text-sm">{text}</Text>
+    </Flex>
+  );
+}
+
+function TouchpointV4() {
   return (
     <div className="flex w-full h-full bg-white overflow-hidden rounded-2xl">
       {/* Sidebar */}
       <div className="w-60 h-full bg-white flex flex-col justify-between shrink-0 shadow-[inset_-0.5px_0px_0px_0px_rgba(108,113,140,0.28)]">
         <div>
           <Flex alignItems="center" gap="SM" className="px-3 py-2.5">
-            <InitialsFigure
-              initials="SL"
-              color="success"
-              size="MD"
-              mode="dark"
-              shape="squared"
-            />
+            <InitialsFigure initials="SL" color="success" size="MD" mode="dark" shape="squared" />
             <div className="flex-1 min-w-0">
               <Text className="font-semibold truncate">Acme Corp.</Text>
               <Text color="default.main.secondary" className="text-sm">Admin</Text>
             </div>
             <Icon name="arrow-left-right" size="24px" color="#535A74" />
           </Flex>
-
           <div>
             {NAV_ITEMS.map((item) => (
               <SidebarNavItem key={item.label} {...item} />
             ))}
           </div>
         </div>
-
         <div>
           <div className="shadow-[inset_0px_0.5px_0px_0px_rgba(108,113,140,0.28)]">
             {BOTTOM_NAV_ITEMS.map((item) => (
               <SidebarNavItem key={item.label} {...item} />
             ))}
           </div>
-
           <Flex alignItems="center" justifyContent="space-between" className="h-16 px-4">
             <Icon name="maze-logo" size="24px" color="#535A74" />
             <ActionButton emphasis="tertiary" size="SM" iconOnly icon={<Icon name="collapse" size="16px" />} aria-label="Collapse sidebar">
@@ -286,7 +288,6 @@ function TouchpointV1() {
 
       {/* Main area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
         <Flex
           alignItems="center"
           justifyContent="flex-end"
@@ -301,9 +302,7 @@ function TouchpointV1() {
           </Flex>
         </Flex>
 
-        {/* Content with banner */}
         <div className="flex-1 overflow-y-auto">
-          {/* Purple banner with background image */}
           <div className="h-[264px] bg-[#C095F9] relative overflow-hidden">
             <img
               src="/images/home-cover.png"
@@ -313,14 +312,13 @@ function TouchpointV1() {
             />
           </div>
 
-          {/* Main content */}
           <div className="max-w-[1072px] mx-auto px-8 -mt-[200px] relative z-10 pb-8">
             <Heading level={1} style={{ color: '#FFFFFF' }} className="mb-12">
               Welcome, Walt
             </Heading>
 
             <div className="bg-white rounded-lg p-8 flex flex-col gap-8">
-              {/* Continuous Research */}
+              {/* Live Pulse - Research Autopilot */}
               <div className="flex flex-col gap-5">
                 <div>
                   <Flex alignItems="center" gap="SM" className="mb-1">
@@ -336,15 +334,38 @@ function TouchpointV1() {
 
                 <RunningStudyRow {...RUNNING_STUDY} />
 
-                <div className="mt-2">
-                  <Text type="caption" color="default.main.secondary" className="mb-3">
-                    Suggested for your team
-                  </Text>
+                <div className="mt-2 flex flex-col gap-4">
+                  <Flex alignItems="center" justifyContent="space-between">
+                    <Flex alignItems="center" gap="XS">
+                      <Icon name="sparkles" size="16px" color="#6B5BEE" />
+                      <Text className="font-semibold text-sm">Autopilot</Text>
+                      <Text type="caption" color="default.main.secondary" className="ml-1">
+                        Your research runs itself
+                      </Text>
+                    </Flex>
+                    <CTAButton emphasis="tertiary" size="SM">
+                      <Icon name="plus" size="14px" />
+                      Create new rule
+                    </CTAButton>
+                  </Flex>
+
                   <Flex gap="MD">
-                    {SUGGESTED_STUDIES.map((study) => (
-                      <SuggestedStudyCard key={study.title} {...study} />
+                    {AUTOMATION_RULES.map((rule) => (
+                      <AutomationRuleCard key={rule.trigger} {...rule} />
                     ))}
                   </Flex>
+
+                  <div
+                    className="rounded-lg p-4 flex flex-col gap-1"
+                    style={{ backgroundColor: '#F8F8FB' }}
+                  >
+                    <Text type="caption" color="default.main.secondary" className="mb-1">
+                      Recent activity
+                    </Text>
+                    {RECENT_ACTIVITY.map((item) => (
+                      <ActivityLine key={item.text} {...item} />
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -401,9 +422,9 @@ function TouchpointV1() {
   );
 }
 
-TouchpointV1.Title = 'Touchpoint v1';
-TouchpointV1.Description = 'Maze homepage with Always On touchpoint';
-TouchpointV1.Order = 1;
-TouchpointV1.Group = 'Always On';
+TouchpointV4.Title = 'Touchpoint v4';
+TouchpointV4.Description = 'Research Autopilot';
+TouchpointV4.Order = 4;
+TouchpointV4.Group = 'Always On';
 
-export default TouchpointV1;
+export default TouchpointV4;
