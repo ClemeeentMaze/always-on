@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Text,
   Heading,
@@ -56,22 +57,22 @@ const RUNNING_STUDY = {
 
 const AUTOMATION_RULES = [
   {
+    triggerIcon: 'tester-cards',
     trigger: 'When 50+ responses collected',
-    action: 'Share key insights to #product-team',
     actionIcon: 'share',
-    triggerColor: { bg: '#FFF3E0', text: '#E65100' },
+    action: 'Share key insights to #product-team',
   },
   {
+    triggerIcon: 'sparkles',
     trigger: 'When new theme detected',
+    actionIcon: 'idea',
     action: 'Suggest follow-up study on lowest-scoring themes',
-    actionIcon: 'sparkles',
-    triggerColor: { bg: '#F0EDFF', text: '#6B5BEE' },
   },
   {
+    triggerIcon: 'refresh',
     trigger: 'Every Monday',
-    action: 'Generate weekly summary for stakeholders',
     actionIcon: 'message',
-    triggerColor: { bg: '#E8F0FE', text: '#0568FD' },
+    action: 'Generate weekly summary for stakeholders',
   },
 ];
 
@@ -213,45 +214,34 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
   );
 }
 
-function AutomationRuleCard({ trigger, action, actionIcon, triggerColor }) {
+function AutomationRuleCard({ triggerIcon, trigger, actionIcon, action }) {
   return (
     <div className="flex-1 min-w-0 bg-white rounded-lg p-4 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
       <Flex alignItems="center" justifyContent="space-between">
-        <Tag bg={triggerColor.bg} color={triggerColor.text} height="24px" lineHeight="24px" fontSize="12px" borderRadius="4px">
-          {trigger}
-        </Tag>
+        <Flex alignItems="center" gap="XS">
+          <Icon name={triggerIcon} size="14px" color="#9DA2B8" />
+          <Text type="caption" color="default.main.secondary">{trigger}</Text>
+        </Flex>
         <Dot size={8} color="#2E7D32" />
       </Flex>
 
-      <div className="flex items-center gap-1.5 text-[#9DA2B8]">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8 3v10M8 13l-3-3M8 13l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <div className="flex items-center gap-2 pl-0.5">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M6 2v8M6 10L3.5 7.5M6 10l2.5-2.5" stroke="#CDCEDD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
 
-      <Flex alignItems="flex-start" gap="SM">
-        <div className="shrink-0 mt-0.5">
-          <Icon name={actionIcon} size="16px" color="#535A74" />
-        </div>
+      <Flex alignItems="center" gap="SM" className="rounded-md px-3 py-2" style={{ backgroundColor: '#F8F8FB' }}>
+        <Icon name={actionIcon} size="16px" color="#535A74" />
         <Text className="text-sm leading-5">{action}</Text>
       </Flex>
     </div>
   );
 }
 
-function ActivityLine({ time, icon, text }) {
-  return (
-    <Flex alignItems="center" gap="SM" className="py-1.5">
-      <Text type="caption" color="default.main.secondary" className="w-20 shrink-0 text-right">
-        {time}
-      </Text>
-      <Icon name={icon} size="14px" color="#9DA2B8" />
-      <Text className="text-sm">{text}</Text>
-    </Flex>
-  );
-}
-
 function TouchpointV4() {
+  const [activityExpanded, setActivityExpanded] = useState(false);
+
   return (
     <div className="flex w-full h-full bg-white overflow-hidden rounded-2xl">
       {/* Sidebar */}
@@ -343,29 +333,54 @@ function TouchpointV4() {
                         Your research runs itself
                       </Text>
                     </Flex>
-                    <CTAButton emphasis="tertiary" size="SM">
-                      <Icon name="plus" size="14px" />
-                      Create new rule
-                    </CTAButton>
+                    <Flex alignItems="center" gap="SM">
+                      <button
+                        type="button"
+                        onClick={() => setActivityExpanded(!activityExpanded)}
+                        className="inline-flex items-center gap-1 text-sm cursor-pointer bg-transparent border-none p-0"
+                        style={{ color: '#535A74' }}
+                      >
+                        <Icon name="refresh" size="14px" color="#535A74" />
+                        <span>Recent activity</span>
+                        <Icon
+                          name="chevron-right"
+                          size="14px"
+                          color="#535A74"
+                          style={{
+                            transform: activityExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                            transition: 'transform 200ms ease',
+                          }}
+                        />
+                      </button>
+                      <CTAButton emphasis="tertiary" size="SM">
+                        <Icon name="plus" size="14px" />
+                        Create rule
+                      </CTAButton>
+                    </Flex>
                   </Flex>
+
+                  {activityExpanded && (
+                    <div
+                      className="rounded-lg p-3 flex flex-col gap-0.5"
+                      style={{ backgroundColor: '#F8F8FB' }}
+                    >
+                      {RECENT_ACTIVITY.map((item) => (
+                        <Flex key={item.text} alignItems="center" gap="SM" className="py-1">
+                          <Text type="caption" color="default.main.secondary" className="w-20 shrink-0 text-right">
+                            {item.time}
+                          </Text>
+                          <Icon name={item.icon} size="14px" color="#9DA2B8" />
+                          <Text className="text-sm">{item.text}</Text>
+                        </Flex>
+                      ))}
+                    </div>
+                  )}
 
                   <Flex gap="MD">
                     {AUTOMATION_RULES.map((rule) => (
                       <AutomationRuleCard key={rule.trigger} {...rule} />
                     ))}
                   </Flex>
-
-                  <div
-                    className="rounded-lg p-4 flex flex-col gap-1"
-                    style={{ backgroundColor: '#F8F8FB' }}
-                  >
-                    <Text type="caption" color="default.main.secondary" className="mb-1">
-                      Recent activity
-                    </Text>
-                    {RECENT_ACTIVITY.map((item) => (
-                      <ActivityLine key={item.text} {...item} />
-                    ))}
-                  </div>
                 </div>
               </div>
 

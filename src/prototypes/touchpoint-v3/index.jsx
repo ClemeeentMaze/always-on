@@ -59,28 +59,45 @@ const OBSERVATIONS = [
     category: 'Product-market fit',
     categoryColor: { bg: '#FFF3E0', text: '#E65100' },
     accentColor: '#E65100',
-    insight: '67% of users mention pricing as the main reason they considered switching to a competitor.',
-    detail: 'Surfaced from 23 responses this week',
+    insight: '67% of users mention pricing as the main reason they considered switching.',
+    detail: '23 responses this week',
     sentiment: 'negative',
     cta: 'Dig deeper',
+    clipCount: 5,
+    clipAvatars: [
+      { initials: 'AL', color: 'rose' },
+      { initials: 'MK', color: 'lavender' },
+      { initials: 'JP', color: 'success' },
+    ],
   },
   {
     category: 'Competitive landscape',
     categoryColor: { bg: '#E8F0FE', text: '#0568FD' },
     accentColor: '#0568FD',
-    insight: 'Users consistently praise our onboarding speed but rank competitor dashboards higher for data visualization.',
-    detail: 'Surfaced from 15 responses across 3 studies',
+    insight: 'Users praise our onboarding speed but rank competitor dashboards higher.',
+    detail: '15 responses across 3 studies',
     sentiment: 'neutral',
-    cta: 'Create follow-up study',
+    cta: 'Create follow-up',
+    clipCount: 3,
+    clipAvatars: [
+      { initials: 'SL', color: 'awake' },
+      { initials: 'RB', color: 'featured' },
+    ],
   },
   {
     category: 'User onboarding',
     categoryColor: { bg: '#E8F5E9', text: '#2E7D32' },
     accentColor: '#2E7D32',
-    insight: 'New users who complete the guided setup are 3x more likely to return within the first week.',
-    detail: 'Surfaced from 41 responses this month',
+    insight: 'Users who complete guided setup are 3x more likely to return within a week.',
+    detail: '41 responses this month',
     sentiment: 'positive',
     cta: 'Dig deeper',
+    clipCount: 8,
+    clipAvatars: [
+      { initials: 'TW', color: 'rose' },
+      { initials: 'KL', color: 'dormant' },
+      { initials: 'NP', color: 'lavender' },
+    ],
   },
 ];
 
@@ -222,23 +239,52 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
   );
 }
 
-function ObservationCard({ category, categoryColor, accentColor, insight, detail, sentiment, cta }) {
+function HighlightReelThumb({ clipCount, clipAvatars, accentColor }) {
   return (
     <div
-      className="bg-white rounded-lg p-5 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow"
+      className="w-[140px] shrink-0 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer relative overflow-hidden group"
+      style={{ backgroundColor: '#F8F8FB' }}
+    >
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+        style={{ backgroundColor: accentColor + '18' }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l6 4-6 4V4z" fill={accentColor} />
+        </svg>
+      </div>
+      <div className="flex items-center gap-1">
+        <div className="flex -space-x-1.5">
+          {clipAvatars.slice(0, 3).map((a) => (
+            <InitialsFigure key={a.initials} initials={a.initials} color={a.color} size="XS" mode="dark" shape="rounded" />
+          ))}
+        </div>
+        <Text type="caption" color="default.main.secondary">{clipCount} clips</Text>
+      </div>
+    </div>
+  );
+}
+
+function ObservationCard({ category, categoryColor, accentColor, insight, detail, sentiment, cta, clipCount, clipAvatars }) {
+  return (
+    <div
+      className="flex-1 min-w-0 bg-white rounded-lg overflow-hidden shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow flex"
       style={{ borderLeft: `3px solid ${accentColor}` }}
     >
-      <Flex alignItems="center" justifyContent="space-between">
-        <Tag bg={categoryColor.bg} color={categoryColor.text} height="24px" lineHeight="24px" fontSize="12px" borderRadius="4px">
-          {category}
-        </Tag>
-        <Dot size={8} color={SENTIMENT_COLORS[sentiment]} />
-      </Flex>
-      <Text className="font-semibold leading-6">{insight}</Text>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text type="caption" color="default.main.secondary">{detail}</Text>
-        <CTAButton emphasis="tertiary" size="SM">{cta}</CTAButton>
-      </Flex>
+      <div className="flex-1 p-4 flex flex-col gap-2.5 min-w-0">
+        <Flex alignItems="center" gap="SM">
+          <Tag bg={categoryColor.bg} color={categoryColor.text} height="22px" lineHeight="22px" fontSize="11px" borderRadius="4px">
+            {category}
+          </Tag>
+          <Dot size={6} color={SENTIMENT_COLORS[sentiment]} />
+        </Flex>
+        <Text className="font-semibold text-sm leading-5">{insight}</Text>
+        <Flex alignItems="center" justifyContent="space-between">
+          <Text type="caption" color="default.main.secondary">{detail}</Text>
+          <CTAButton emphasis="tertiary" size="SM">{cta}</CTAButton>
+        </Flex>
+      </div>
+      <HighlightReelThumb clipCount={clipCount} clipAvatars={clipAvatars} accentColor={accentColor} />
     </div>
   );
 }
@@ -330,9 +376,11 @@ function TouchpointV3() {
                   <Text type="caption" color="default.main.secondary">
                     Worth exploring further
                   </Text>
-                  {OBSERVATIONS.map((obs) => (
-                    <ObservationCard key={obs.category} {...obs} />
-                  ))}
+                  <div className="flex gap-3 overflow-x-auto">
+                    {OBSERVATIONS.map((obs) => (
+                      <ObservationCard key={obs.category} {...obs} />
+                    ))}
+                  </div>
                 </div>
               </div>
 

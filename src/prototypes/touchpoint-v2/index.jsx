@@ -12,6 +12,7 @@ import {
   TextBadge,
   Tag,
   Dot,
+  SegmentControl,
 } from '@framework/components/ariane';
 
 const TEMPLATE_IMAGES = [
@@ -55,10 +56,21 @@ const RUNNING_STUDY = {
   newInsights: 2,
 };
 
-const SUGGESTION_CHIPS = [
+const CONTEXT_CHIPS = [
   'Why are users dropping off at checkout?',
   'How do users compare us to competitors?',
   'What friction points exist in onboarding?',
+];
+
+const INSIGHT_CHIPS = [
+  'Explore pricing concerns from recent sessions',
+  'Why do power users skip the dashboard?',
+  'Dig into onboarding drop-off patterns',
+];
+
+const SEGMENT_OPTIONS = [
+  { id: 'context', label: 'From your context' },
+  { id: 'insights', label: 'From your insights' },
 ];
 
 function SidebarNavItem({ icon, label, active, hasChevron }) {
@@ -195,6 +207,9 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
 
 function TouchpointV2() {
   const [promptValue, setPromptValue] = useState('');
+  const [suggestionSource, setSuggestionSource] = useState('context');
+
+  const chips = suggestionSource === 'context' ? CONTEXT_CHIPS : INSIGHT_CHIPS;
 
   return (
     <div className="flex w-full h-full bg-white overflow-hidden rounded-2xl">
@@ -262,7 +277,67 @@ function TouchpointV2() {
             </Heading>
 
             <div className="bg-white rounded-lg p-8 flex flex-col gap-8">
-              {/* Live Pulse - AI Research Prompt */}
+              {/* AI Research Prompt - Hero section */}
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-2">
+                    <Icon name="sparkles" size="20px" color="#6B5BEE" />
+                    <Heading level={3}>What do you want to research?</Heading>
+                  </div>
+
+                  <div
+                    className="flex items-start gap-3 rounded-xl px-5 py-4 transition-shadow focus-within:shadow-[0px_0px_0px_2px_rgba(107,91,238,0.3)]"
+                    style={{
+                      boxShadow: 'inset 0px 0px 0px 1.5px rgba(108,113,140,0.28)',
+                    }}
+                  >
+                    <Icon name="sparkles" size="24px" color="#6B5BEE" className="mt-0.5 shrink-0" />
+                    <textarea
+                      value={promptValue}
+                      onChange={(e) => setPromptValue(e.target.value)}
+                      placeholder="Describe what you want to learn about your users, and we'll generate a study for you..."
+                      rows={2}
+                      className="flex-1 outline-none text-[16px] leading-6 placeholder:text-[#9DA2B8] bg-transparent resize-none"
+                    />
+                    {promptValue && (
+                      <CTAButton emphasis="primary" size="SM">
+                        <Icon name="sparkles" size="14px" />
+                        Generate study
+                      </CTAButton>
+                    )}
+                  </div>
+
+                  <Flex alignItems="center" justifyContent="space-between">
+                    <SegmentControl
+                      options={SEGMENT_OPTIONS}
+                      selected={suggestionSource}
+                      onChange={(id) => setSuggestionSource(id)}
+                      size="SM"
+                    />
+                  </Flex>
+
+                  <div className="flex flex-wrap gap-2">
+                    {chips.map((chip) => (
+                      <button
+                        key={chip}
+                        type="button"
+                        onClick={() => setPromptValue(chip)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors cursor-pointer hover:bg-[#F0EDFF]"
+                        style={{
+                          backgroundColor: promptValue === chip ? '#F0EDFF' : '#F8F8FB',
+                          color: promptValue === chip ? '#6B5BEE' : '#535A74',
+                          border: promptValue === chip ? '1px solid #6B5BEE' : '1px solid transparent',
+                        }}
+                      >
+                        <Icon name="sparkles" size="14px" color={promptValue === chip ? '#6B5BEE' : '#9DA2B8'} />
+                        {chip}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Pulse - Ongoing studies */}
               <div className="flex flex-col gap-5">
                 <div>
                   <Flex alignItems="center" gap="SM" className="mb-1">
@@ -277,53 +352,6 @@ function TouchpointV2() {
                 </div>
 
                 <RunningStudyRow {...RUNNING_STUDY} />
-
-                <div className="mt-2 flex flex-col gap-4">
-                  <div
-                    className="flex items-center gap-3 rounded-lg px-4 py-3 transition-shadow"
-                    style={{
-                      boxShadow: 'inset 0px 0px 0px 1px rgba(108,113,140,0.28)',
-                    }}
-                  >
-                    <Icon name="sparkles" size="20px" color="#6B5BEE" />
-                    <input
-                      type="text"
-                      value={promptValue}
-                      onChange={(e) => setPromptValue(e.target.value)}
-                      placeholder="What do you want to learn about your users?"
-                      className="flex-1 outline-none text-[15px] placeholder:text-[#9DA2B8] bg-transparent"
-                    />
-                    {promptValue && (
-                      <CTAButton emphasis="primary" size="SM">
-                        Generate study
-                      </CTAButton>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <Text type="caption" color="default.main.secondary">
-                      Based on your recent insights
-                    </Text>
-                    <div className="flex flex-wrap gap-2">
-                      {SUGGESTION_CHIPS.map((chip) => (
-                        <button
-                          key={chip}
-                          type="button"
-                          onClick={() => setPromptValue(chip)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors cursor-pointer hover:bg-[#F0EDFF]"
-                          style={{
-                            backgroundColor: promptValue === chip ? '#F0EDFF' : '#F8F8FB',
-                            color: promptValue === chip ? '#6B5BEE' : '#535A74',
-                            border: promptValue === chip ? '1px solid #6B5BEE' : '1px solid transparent',
-                          }}
-                        >
-                          <Icon name="sparkles" size="14px" color={promptValue === chip ? '#6B5BEE' : '#9DA2B8'} />
-                          {chip}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Maze templates */}
