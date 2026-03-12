@@ -9,6 +9,7 @@ import {
   IconFigure,
   InitialsFigure,
   TextBadge,
+  Tag,
   Dot,
 } from '@framework/components/ariane';
 
@@ -185,7 +186,7 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
           <div className="min-w-0">
             <Text className="font-semibold truncate">{name}</Text>
             <Flex alignItems="center" gap="XS">
-              <Text color="default.main.secondary" className="text-sm">Continuous</Text>
+              <Text color="default.main.secondary" className="text-sm">AI-moderated</Text>
               <Text color="default.main.secondary" className="text-sm">·</Text>
               <Icon name="refresh" size="14px" color="#535A74" />
               <Text color="default.main.secondary" className="text-sm">{recurrence}</Text>
@@ -210,16 +211,12 @@ function RunningStudyRow({ name, recurrence, newInsights }) {
 
 function SuggestedStudyCard({ icon, iconColor, title, description }) {
   return (
-    <div className="flex-1 min-w-0 bg-white rounded-lg p-5 flex flex-col gap-4 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
-      <IconFigure name={icon} color={iconColor} size="MDPlus" mode="light" shape="squared" />
-      <div className="flex flex-col gap-1 flex-1">
-        <Text className="font-semibold">{title}</Text>
-        <Text color="default.main.secondary" className="text-sm">{description}</Text>
+    <div className="flex-1 min-w-0 bg-white rounded-lg p-4 flex flex-col gap-3 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
+      <IconFigure name={icon} color={iconColor} size="MD" mode="light" shape="squared" />
+      <div className="flex flex-col gap-1">
+        <Text className="font-semibold text-sm">{title}</Text>
+        <Text color="default.main.secondary" className="text-xs leading-4">{description}</Text>
       </div>
-      <CTAButton emphasis="tertiary" size="SM">
-        <Icon name="plus" size="14px" />
-        Create study
-      </CTAButton>
     </div>
   );
 }
@@ -308,11 +305,13 @@ function TouchpointV1() {
               <div className="flex flex-col gap-5">
                 <div>
                   <Flex alignItems="center" gap="SM" className="mb-1">
-                    <Heading level={3}>Continuous insights</Heading>
-                    <TextBadge sentiment="awake">LIVE</TextBadge>
+                    <Heading level={3}>Live pulse</Heading>
+                    <Tag bg="#F0FAFF" color="#0568FD" height="20px" lineHeight="20px" fontSize="11px" borderRadius="4px">
+                      Live
+                    </Tag>
                   </Flex>
                   <Text color="default.main.secondary">
-                    Studies that run continuously, generating fresh insights for your team to act on.
+                    Continuously running studies
                   </Text>
                 </div>
 
