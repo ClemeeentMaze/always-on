@@ -138,8 +138,8 @@ function ResourceItem({ title, description, isLast }) {
           <Text className="font-semibold">{title}</Text>
           <Text color="default.main.secondary" className="text-sm">{description}</Text>
         </div>
-        <ActionButton emphasis="tertiary" size="SM" iconOnly aria-label="Open">
-          <Icon name="preview" size="16px" />
+        <ActionButton emphasis="tertiary" size="SM" iconOnly icon={<Icon name="preview" size="16px" />} aria-label="Open">
+          Open
         </ActionButton>
       </Flex>
       {!isLast && <div className="h-px bg-[rgba(108,113,140,0.08)]" />}
@@ -184,8 +184,8 @@ function TouchpointV1() {
 
           <Flex alignItems="center" justifyContent="space-between" className="h-16 px-4">
             <Icon name="maze-logo" size="24px" color="#535A74" />
-            <ActionButton emphasis="tertiary" size="SM" iconOnly aria-label="Collapse sidebar">
-              <Icon name="collapse" size="16px" />
+            <ActionButton emphasis="tertiary" size="SM" iconOnly icon={<Icon name="collapse" size="16px" />} aria-label="Collapse sidebar">
+              Collapse
             </ActionButton>
           </Flex>
         </div>
