@@ -8,6 +8,8 @@ import {
   CTAButton,
   IconFigure,
   InitialsFigure,
+  TextBadge,
+  Dot,
 } from '@framework/components/ariane';
 
 const TEMPLATE_IMAGES = [
@@ -43,6 +45,33 @@ const TEAM_AVATARS = [
   { initials: 'DS', color: 'rose' },
   { initials: 'SL', color: 'lavender' },
   { initials: '+1', color: 'dormant' },
+];
+
+const RUNNING_STUDY = {
+  name: 'Checkout flow usability test',
+  recurrence: 'Weekly',
+  newInsights: 2,
+};
+
+const SUGGESTED_STUDIES = [
+  {
+    icon: 'touch',
+    iconColor: 'awake',
+    title: 'Test your new pricing page',
+    description: 'Understand how users react to your updated pricing tiers before launch.',
+  },
+  {
+    icon: 'idea',
+    iconColor: 'featured',
+    title: 'Validate onboarding changes',
+    description: 'Continuously measure whether new users complete setup successfully.',
+  },
+  {
+    icon: 'goal',
+    iconColor: 'success',
+    title: 'Track NPS after each release',
+    description: 'Automatically collect satisfaction scores every time you ship.',
+  },
 ];
 
 function SidebarNavItem({ icon, label, active, hasChevron }) {
@@ -147,6 +176,54 @@ function ResourceItem({ title, description, isLast }) {
   );
 }
 
+function RunningStudyRow({ name, recurrence, newInsights }) {
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] cursor-pointer hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+      <Flex alignItems="center" justifyContent="space-between">
+        <Flex alignItems="center" gap="SM" className="min-w-0 flex-1">
+          <IconFigure name="studies" color="featured" size="MDPlus" mode="light" shape="squared" />
+          <div className="min-w-0">
+            <Text className="font-semibold truncate">{name}</Text>
+            <Flex alignItems="center" gap="XS">
+              <Text color="default.main.secondary" className="text-sm">Continuous</Text>
+              <Text color="default.main.secondary" className="text-sm">·</Text>
+              <Icon name="refresh" size="14px" color="#535A74" />
+              <Text color="default.main.secondary" className="text-sm">{recurrence}</Text>
+            </Flex>
+          </div>
+        </Flex>
+
+        <Flex alignItems="center" gap="LG">
+          <TextBadge sentiment="awake">LIVE</TextBadge>
+
+          <IconFigure name="maze-logo" color="primary" size="SM" mode="dark" shape="squared" />
+
+          <Flex alignItems="center" gap="XS">
+            <Dot size={8} color="blue500" />
+            <Text className="whitespace-nowrap">{newInsights} New insights</Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    </div>
+  );
+}
+
+function SuggestedStudyCard({ icon, iconColor, title, description }) {
+  return (
+    <div className="flex-1 min-w-0 bg-white rounded-lg p-5 flex flex-col gap-4 shadow-[inset_0px_0px_0px_0.5px_rgba(108,113,140,0.28)] hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-shadow">
+      <IconFigure name={icon} color={iconColor} size="MDPlus" mode="light" shape="squared" />
+      <div className="flex flex-col gap-1 flex-1">
+        <Text className="font-semibold">{title}</Text>
+        <Text color="default.main.secondary" className="text-sm">{description}</Text>
+      </div>
+      <CTAButton emphasis="tertiary" size="SM">
+        <Icon name="plus" size="14px" />
+        Create study
+      </CTAButton>
+    </div>
+  );
+}
+
 function TouchpointV1() {
   return (
     <div className="flex w-full h-full bg-white overflow-hidden rounded-2xl">
@@ -227,11 +304,30 @@ function TouchpointV1() {
             </Heading>
 
             <div className="bg-white rounded-lg p-8 flex flex-col gap-8">
-              {/* Always On placeholder */}
-              <div className="bg-[#F8F8FB] rounded-lg h-[363px] flex items-center justify-center">
-                <Text color="default.main.secondary" className="text-lg italic">
-                  Always On Section
-                </Text>
+              {/* Continuous Research */}
+              <div className="flex flex-col gap-5">
+                <div>
+                  <Flex alignItems="center" gap="SM" className="mb-1">
+                    <Heading level={3}>Continuous insights</Heading>
+                    <TextBadge sentiment="awake">LIVE</TextBadge>
+                  </Flex>
+                  <Text color="default.main.secondary">
+                    Studies that run continuously, generating fresh insights for your team to act on.
+                  </Text>
+                </div>
+
+                <RunningStudyRow {...RUNNING_STUDY} />
+
+                <div className="mt-2">
+                  <Text color="default.main.secondary" className="text-sm font-semibold uppercase tracking-wider mb-3">
+                    Suggested for your team
+                  </Text>
+                  <Flex gap="MD">
+                    {SUGGESTED_STUDIES.map((study) => (
+                      <SuggestedStudyCard key={study.title} {...study} />
+                    ))}
+                  </Flex>
+                </div>
               </div>
 
               {/* Maze templates */}
